@@ -30,6 +30,7 @@ Transform:
   m_Children:
   - {fileID: 8586398669567462721}
   - {fileID: 4043628675615505604}
+  - {fileID: 3959665314739033705}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -168,4 +169,178 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 8849142133981154882, guid: 50b146f253aadf44dafe10f4cc685006, type: 3}
   m_PrefabInstance: {fileID: 1001896960524223235}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7312506450365101487
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 214380547840310735}
+    m_Modifications:
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectableLevel1
+      value: 
+      objectReference: {fileID: 6763855684962134297, guid: b965159e60c85154a809035a1ec26ada, type: 3}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectableLevel2
+      value: 
+      objectReference: {fileID: -5725992674982640707, guid: 678d60da4856f3845af0e952088e7d46, type: 3}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectableLevel3
+      value: 
+      objectReference: {fileID: -5434965006335699942, guid: 666b9b3a8ccd95a428f19e355e72d1a0, type: 3}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[0].Name
+      value: Level 1 Golf Balls
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[1].Name
+      value: Level 2 Golf Balls
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[2].Name
+      value: Level 3 Golf Balls
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[0].Count
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[1].Count
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[2].Count
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[0].Prefab
+      value: 
+      objectReference: {fileID: 6763855684962134297, guid: b965159e60c85154a809035a1ec26ada, type: 3}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[1].Prefab
+      value: 
+      objectReference: {fileID: -3559437925008097523, guid: 8848921667ea9194cb1522d66d407bee, type: 3}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[2].Prefab
+      value: 
+      objectReference: {fileID: 5370019044493457166, guid: f8b09e43ba06fc3499e5b372834f0089, type: 3}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[0].SpawnCount
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[1].SpawnCount
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[2].SpawnCount
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[0].Collectable
+      value: 
+      objectReference: {fileID: 6763855684962134297, guid: b965159e60c85154a809035a1ec26ada, type: 3}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[0].RewardPoint
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[1].Collectable
+      value: 
+      objectReference: {fileID: -5725992674982640707, guid: 678d60da4856f3845af0e952088e7d46, type: 3}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[1].RewardPoint
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[2].Collectable
+      value: 
+      objectReference: {fileID: -5434965006335699942, guid: 666b9b3a8ccd95a428f19e355e72d1a0, type: 3}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[2].RewardPoint
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[0].SpawnPoints.Array.size
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[1].SpawnPoints.Array.size
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[2].SpawnPoints.Array.size
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[0].PossibleSpawnPoints.Array.size
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[1].PossibleSpawnPoints.Array.size
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 4857044928962909107, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: collectables.Array.data[2].PossibleSpawnPoints.Array.size
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 6019257991280665542, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6019257991280665542, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6019257991280665542, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6019257991280665542, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6019257991280665542, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6019257991280665542, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6019257991280665542, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6019257991280665542, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6019257991280665542, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6019257991280665542, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6019257991280665542, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8195399794750698835, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+      propertyPath: m_Name
+      value: CollectableManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+--- !u!4 &3959665314739033705 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6019257991280665542, guid: be8c9f94e029145448f6eaf97a5d2491, type: 3}
+  m_PrefabInstance: {fileID: 7312506450365101487}
   m_PrefabAsset: {fileID: 0}
