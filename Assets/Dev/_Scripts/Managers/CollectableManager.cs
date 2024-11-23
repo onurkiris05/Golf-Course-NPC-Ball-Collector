@@ -2,43 +2,55 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
+using Game.Collectables;
+using Game.Utilities;
 
-[System.Serializable]
-public class CollectableData
+namespace Game.Managers
 {
-    public string Name;
-    [ShowAssetPreview]
-    public Collectable_Base Prefab;
-    public int SpawnCount;
-    public int RewardPoint;
-    public Transform[] PossibleSpawnPoints;
-}
-
-public class CollectableManager : MonoBehaviour
-{
-    [SerializeField] CollectableData[] collectables;
-
-    private void Start() => SpawnCollectables();
-
-    private void SpawnCollectables()
+    [System.Serializable]
+    public class CollectableData
     {
-        foreach (CollectableData collectable in collectables)
+        public string Name;
+        [ShowAssetPreview]
+        public Collectable_Base Prefab;
+        public int SpawnCount;
+        public int RewardPoint;
+        public Transform[] PossibleSpawnPoints;
+    }
+
+    public class CollectableManager : StaticInstance<CollectableManager>
+    {
+        [SerializeField] CollectableData[] collectables;
+
+        public List<Collectable_Base> SpawnedCollectables => _spawnedCollectables;
+        private List<Collectable_Base> _spawnedCollectables = new();
+
+        protected override void Awake()
         {
-            var availableSpawnPoints = new List<Transform>(collectable.PossibleSpawnPoints);
+            base.Awake();
+            SpawnCollectables();
+        }
 
-            for (var i = 0; i < collectable.SpawnCount; i++)
+        private void SpawnCollectables()
+        {
+            foreach (CollectableData collectable in collectables)
             {
-                if (availableSpawnPoints.Count == 0)
+                var availableSpawnPoints = new List<Transform>(collectable.PossibleSpawnPoints);
+
+                for (var i = 0; i < collectable.SpawnCount; i++)
                 {
-                    Debug.Log($"Max spawn point count reached! {i}/{collectable.SpawnCount} created.");
-                    break;
+                    if (availableSpawnPoints.Count == 0)
+                    {
+                        Debug.Log($"Max spawn point count reached! {i}/{collectable.SpawnCount} created.");
+                        break;
+                    }
+
+                    var randomIndex = Random.Range(0, availableSpawnPoints.Count);
+                    var instance = Instantiate(collectable.Prefab, availableSpawnPoints[randomIndex].position, Quaternion.identity);
+                    _spawnedCollectables.Add(instance);
+                    collectable.Prefab.Setup(collectable.RewardPoint);
+                    availableSpawnPoints.RemoveAt(randomIndex);
                 }
-
-                var randomIndex = Random.Range(0, availableSpawnPoints.Count);
-                Instantiate(collectable.Prefab, availableSpawnPoints[randomIndex].position, Quaternion.identity);
-                collectable.Prefab.Setup(collectable.RewardPoint);
-
-                availableSpawnPoints.RemoveAt(randomIndex);
             }
         }
     }

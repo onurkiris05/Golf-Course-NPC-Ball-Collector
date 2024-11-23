@@ -1,80 +1,83 @@
 using System.Collections;
 using UnityEngine;
 
-[System.Serializable]
-public class VFXData
+namespace Game.Utilities
 {
-    public string Name;
-}
-
-public class Spawner_VFX : StaticInstance<Spawner_VFX>
-{
-    [Header("Settings")]
-    [SerializeField] private VFXData[] particleSystems;
-
-
-    public void PlayVFX(string vfxName, Vector3 vfxPos)
+    [System.Serializable]
+    public class VFXData
     {
-        var selectedVFX = GetItem(vfxName);
-        if (selectedVFX == null) return;
-
-        StartCoroutine(ProcessVFX(selectedVFX, vfxPos));
+        public string Name;
     }
 
-    public void PlayVFX(string vfxName, Vector3 vfxPos, Transform parent)
+    public class Spawner_VFX : StaticInstance<Spawner_VFX>
     {
-        var selectedVFX = GetItem(vfxName);
-        if (selectedVFX == null) return;
+        [Header("Settings")]
+        [SerializeField] private VFXData[] particleSystems;
 
-        StartCoroutine(ProcessVFX(selectedVFX, vfxPos, parent));
-    }
 
-    public void PlayVFX(string vfxName, Vector3 vfxPos, Vector3 lookAt)
-    {
-        var selectedVFX = GetItem(vfxName);
-        if (selectedVFX == null) return;
-
-        StartCoroutine(ProcessVFX(selectedVFX, vfxPos, null, lookAt));
-    }
-
-    public void PlayVFX(string vfxName, Vector3 vfxPos, Transform parent, Vector3 lookAt)
-    {
-        var selectedVFX = GetItem(vfxName);
-        if (selectedVFX == null) return;
-
-        StartCoroutine(ProcessVFX(selectedVFX, vfxPos, parent, lookAt));
-    }
-
-    private IEnumerator ProcessVFX(
-        VFXData vfxData,
-        Vector3 vfxPos,
-        Transform parent = default,
-        Vector3 vfxRot = default)
-    {
-        var vfxObject = ObjectPooler.Instance.Spawn(vfxData.Name, vfxPos, transform);
-
-        if (vfxObject.TryGetComponent(out ParticleSystem particle))
+        public void PlayVFX(string vfxName, Vector3 vfxPos)
         {
-            if (vfxRot != default)
-                particle.transform.localRotation = Quaternion.Euler(vfxRot);
+            var selectedVFX = GetItem(vfxName);
+            if (selectedVFX == null) return;
 
-            if (parent != null)
-                particle.transform.SetParent(parent);
-
-            yield return UtilityFunctions.BetterWaitForSeconds(particle.main.duration);
-            ObjectPooler.Instance.ReleasePooledObject(vfxData.Name, vfxObject);
-        }
-    }
-
-    private VFXData GetItem(string name)
-    {
-        foreach (var vfxData in particleSystems)
-        {
-            if (vfxData.Name == name)
-                return vfxData;
+            StartCoroutine(ProcessVFX(selectedVFX, vfxPos));
         }
 
-        Debug.LogError($"{gameObject.name} - Particle system name not found!!!");
-        return null;
+        public void PlayVFX(string vfxName, Vector3 vfxPos, Transform parent)
+        {
+            var selectedVFX = GetItem(vfxName);
+            if (selectedVFX == null) return;
+
+            StartCoroutine(ProcessVFX(selectedVFX, vfxPos, parent));
+        }
+
+        public void PlayVFX(string vfxName, Vector3 vfxPos, Vector3 lookAt)
+        {
+            var selectedVFX = GetItem(vfxName);
+            if (selectedVFX == null) return;
+
+            StartCoroutine(ProcessVFX(selectedVFX, vfxPos, null, lookAt));
+        }
+
+        public void PlayVFX(string vfxName, Vector3 vfxPos, Transform parent, Vector3 lookAt)
+        {
+            var selectedVFX = GetItem(vfxName);
+            if (selectedVFX == null) return;
+
+            StartCoroutine(ProcessVFX(selectedVFX, vfxPos, parent, lookAt));
+        }
+
+        private IEnumerator ProcessVFX(
+            VFXData vfxData,
+            Vector3 vfxPos,
+            Transform parent = default,
+            Vector3 vfxRot = default)
+        {
+            var vfxObject = ObjectPooler.Instance.Spawn(vfxData.Name, vfxPos, transform);
+
+            if (vfxObject.TryGetComponent(out ParticleSystem particle))
+            {
+                if (vfxRot != default)
+                    particle.transform.localRotation = Quaternion.Euler(vfxRot);
+
+                if (parent != null)
+                    particle.transform.SetParent(parent);
+
+                yield return UtilityFunctions.BetterWaitForSeconds(particle.main.duration);
+                ObjectPooler.Instance.ReleasePooledObject(vfxData.Name, vfxObject);
+            }
+        }
+
+        private VFXData GetItem(string name)
+        {
+            foreach (var vfxData in particleSystems)
+            {
+                if (vfxData.Name == name)
+                    return vfxData;
+            }
+
+            Debug.LogError($"{gameObject.name} - Particle system name not found!!!");
+            return null;
+        }
     }
 }

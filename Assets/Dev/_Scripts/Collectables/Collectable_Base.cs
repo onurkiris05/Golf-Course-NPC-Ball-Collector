@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
 
-public abstract class Collectable_Base : MonoBehaviour
+namespace Game.Collectables
 {
-    public int RewardPoint => _rewardPoint;
-    [ShowNonSerializedField]
-    private int _rewardPoint;
-
-    protected virtual void Start()
+    public abstract class Collectable_Base : MonoBehaviour
     {
-    }
+        public int RewardPoint => _rewardPoint;
+        [ShowNonSerializedField]
+        private int _rewardPoint;
 
-    public virtual void Setup(int rewardPoint)
-    {
-        _rewardPoint = rewardPoint;
-    }
+        public virtual void Setup(int rewardPoint)
+        {
+            _rewardPoint = rewardPoint;
+        }
 
-    public abstract void Collect();
+        public abstract int Collect();
+    }
 }

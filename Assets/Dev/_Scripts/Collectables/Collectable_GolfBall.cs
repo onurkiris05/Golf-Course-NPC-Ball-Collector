@@ -3,37 +3,56 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Collectable_GolfBall : Collectable_Base
+namespace Game.Collectables
 {
-    [Header("Animation Settings")]
-    [SerializeField] float offsetYValue = 0.5f;
-    [SerializeField] float speed = 1f;
-    private Coroutine _animationCoroutine;
-
-    protected override void Start()
+    public class Collectable_GolfBall : Collectable_Base
     {
-        base.Start();
-        _animationCoroutine = StartCoroutine(AnimateCollectable());
-    }
+        [Header("Animation Settings")]
+        [SerializeField] float offsetYValue = 0.5f;
+        [SerializeField] float speed = 1f;
 
-    IEnumerator AnimateCollectable()
-    {
-        var startPos = transform.position;
-        while (true)
+        private MeshRenderer _meshRenderer;
+        private Collider _collider;
+        private Coroutine _animationCoroutine;
+
+        private void Awake()
         {
-            var sinValue = (Mathf.Sin(Time.time * speed) + 1) / 2;
-            var newY = startPos.y + sinValue * offsetYValue;
-
-            transform.position = new Vector3(transform.position.x, newY, transform.position.z);
-            yield return null;
+            _meshRenderer = GetComponentInChildren<MeshRenderer>();
+            _collider = GetComponent<Collider>();
         }
-    }
 
-    public override void Collect()
-    {
-        if (_animationCoroutine != null)
-            StopCoroutine(_animationCoroutine);
+        private void Start()
+        {
+            _animationCoroutine = StartCoroutine(AnimateCollectable());
+        }
 
-        Debug.Log("It worked!");
+        IEnumerator AnimateCollectable()
+        {
+            var startPos = transform.position;
+            while (true)
+            {
+                var sinValue = (Mathf.Sin(Time.time * speed) + 1) / 2;
+                var newY = startPos.y + sinValue * offsetYValue;
+
+                transform.position = new Vector3(transform.position.x, newY, transform.position.z);
+                yield return null;
+            }
+        }
+
+        public override int Collect()
+        {
+            if (_animationCoroutine != null)
+                StopCoroutine(_animationCoroutine);
+
+            SetCollectable(false);
+            Debug.Log($"{name} Triggered!");
+            return RewardPoint;
+        }
+
+        private void SetCollectable(bool state)
+        {
+            _meshRenderer.enabled = state;
+            _collider.enabled = state;
+        }
     }
 }

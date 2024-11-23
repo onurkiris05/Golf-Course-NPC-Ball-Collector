@@ -4,62 +4,65 @@ using DG.Tweening;
 using NaughtyAttributes;
 using UnityEngine.UI;
 
-[System.Serializable]
-public class ImageData
+namespace Game.Utilities
 {
-    public string Name;
-    [ShowAssetPreview]
-    public Sprite ImageToSpawn;
-}
-
-public class Spawner_Image : StaticInstance<Spawner_Image>
-{
-    [Header("Settings")]
-    [SerializeField] private Canvas parentCanvas;
-    [SerializeField] private ImageData[] imageDatas;
-
-
-    #region SpawnAndMove
-
-    public void SpawnAndMove(string imageName, Vector3 worldPosition, RectTransform targetRectTransform, int count = 1)
+    [System.Serializable]
+    public class ImageData
     {
-        var selectedImageData = GetItem(imageName);
-        if (selectedImageData == null) return;
-
-        StartCoroutine(ProcessSpawnAndMove(selectedImageData, worldPosition, targetRectTransform, count));
+        public string Name;
+        [ShowAssetPreview]
+        public Sprite ImageToSpawn;
     }
 
-    private IEnumerator ProcessSpawnAndMove(ImageData imageData, Vector3 worldPos, RectTransform targetRect, int count)
+    public class Spawner_Image : StaticInstance<Spawner_Image>
     {
-        for (int i = 0; i < count; i++)
+        [Header("Settings")]
+        [SerializeField] private Canvas parentCanvas;
+        [SerializeField] private ImageData[] imageDatas;
+
+
+        #region SpawnAndMove
+
+        public void SpawnAndMove(string imageName, Vector3 worldPosition, RectTransform targetRectTransform, int count = 1)
         {
-            var imageObject = ObjectPooler.Instance.Spawn("Image", parentCanvas.transform);
+            var selectedImageData = GetItem(imageName);
+            if (selectedImageData == null) return;
 
-            if (imageObject.TryGetComponent(out Image image))
+            StartCoroutine(ProcessSpawnAndMove(selectedImageData, worldPosition, targetRectTransform, count));
+        }
+
+        private IEnumerator ProcessSpawnAndMove(ImageData imageData, Vector3 worldPos, RectTransform targetRect, int count)
+        {
+            for (int i = 0; i < count; i++)
             {
-                var screenPosition = Camera.main.WorldToScreenPoint(worldPos);
-                image.transform.position = screenPosition;
-                image.sprite = imageData.ImageToSpawn;
+                var imageObject = ObjectPooler.Instance.Spawn("Image", parentCanvas.transform);
 
-                image.transform.DOMove(targetRect.position, 0.7f).SetEase(Ease.InBack)
-                    .OnComplete(() => ObjectPooler.Instance.ReleasePooledObject("Image", image.gameObject));
+                if (imageObject.TryGetComponent(out Image image))
+                {
+                    var screenPosition = Camera.main.WorldToScreenPoint(worldPos);
+                    image.transform.position = screenPosition;
+                    image.sprite = imageData.ImageToSpawn;
 
-                yield return UtilityFunctions.BetterWaitForSeconds(0.12f);
+                    image.transform.DOMove(targetRect.position, 0.7f).SetEase(Ease.InBack)
+                        .OnComplete(() => ObjectPooler.Instance.ReleasePooledObject("Image", image.gameObject));
+
+                    yield return UtilityFunctions.BetterWaitForSeconds(0.12f);
+                }
             }
         }
-    }
 
-    private ImageData GetItem(string name)
-    {
-        foreach (var imageData in imageDatas)
+        private ImageData GetItem(string name)
         {
-            if (imageData.Name == name)
-                return imageData;
+            foreach (var imageData in imageDatas)
+            {
+                if (imageData.Name == name)
+                    return imageData;
+            }
+
+            Debug.LogError($"{gameObject.name} - Image name not found!!!");
+            return null;
         }
 
-        Debug.LogError($"{gameObject.name} - Image name not found!!!");
-        return null;
+        #endregion
     }
-
-    #endregion
 }
