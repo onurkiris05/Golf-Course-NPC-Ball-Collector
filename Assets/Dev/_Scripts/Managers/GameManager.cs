@@ -8,8 +8,10 @@ namespace Game.Managers
     {
         public static event Action<GameState> OnBeforeStateChanged;
         public static event Action<GameState> OnAfterStateChanged;
+        public static event Action<GameStyle> OnGameStyleChanged;
         public static event Action OnTired;
         public GameState State { get; private set; }
+        public GameStyle GameStyle { get; private set; } = GameStyle.Chaining;
 
 
         #region UNITY EVENTS
@@ -45,8 +47,19 @@ namespace Game.Managers
             Debug.Log($"New state: {newState}");
         }
 
+        // Invoke from RADIO BUTTONS button
+        public void InvokeOnPlayStyle(bool isChaining)
+        {
+            var selectedStyle = isChaining ? GameStyle.Chaining : GameStyle.Sequence;
+            if (GameStyle == selectedStyle) return;
+
+            GameStyle = selectedStyle;
+            OnGameStyleChanged?.Invoke(GameStyle);
+            Debug.Log($"New style: {GameStyle}");
+        }
+
         // Invoke from TAP TO START button
-        public void InvokeOnStartButton()
+        public void InvokeOnStartButton(bool state)
         {
             ChangeState(GameState.Playing);
         }
@@ -72,5 +85,11 @@ namespace Game.Managers
         Playing,
         Tired,
         End
+    }
+
+    public enum GameStyle
+    {
+        Chaining,
+        Sequence
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Game.Collectables;
+using Game.Managers;
 using Game.NPC;
 using UnityEngine;
 using UnityEngine.AI;
@@ -46,7 +47,7 @@ namespace Game.BehaviourTree
             return accessible;
         }
 
-        private List<Transform> GenerateChain(bool isChaining)
+        private List<Transform> GenerateChain(GameStyle gameStyle)
         {
             var currentPosition = _controller.GetAgentPosition();
             var accessibleCollectables = GetAccessibleCollectables();
@@ -82,24 +83,25 @@ namespace Game.BehaviourTree
                 chain.Add(bestNext.transform);
                 currentStamina -= CalculatePathCost(currentPosition, bestNext.transform.position);
 
-                if (!isChaining)
+                switch (gameStyle)
                 {
-                    chain.Add(cartTransform);
-                    currentStamina -= CalculatePathCost(bestNext.transform.position, cartTransform.position);
-                    currentPosition = cartTransform.position;
-                }
-                else
-                {
-                    currentPosition = bestNext.transform.position;
+                    case GameStyle.Sequence:
+                        chain.Add(cartTransform);
+                        currentStamina -= CalculatePathCost(bestNext.transform.position, cartTransform.position);
+                        currentPosition = cartTransform.position;
+                        break;
+                    case GameStyle.Chaining:
+                        currentPosition = bestNext.transform.position;
+                        break;
                 }
 
                 accessibleCollectables.Remove(bestNext);
             }
 
-            if (isChaining)
+            if (gameStyle == GameStyle.Chaining)
                 chain.Add(cartTransform);
 
-            Debug.Log($"{(isChaining ? "Best chain" : "Sequential chain")} calculated. Chain count: {chain.Count}");
+            Debug.Log($"{(gameStyle == GameStyle.Chaining ? "Best chain" : "Sequential chain")} calculated. Chain count: {chain.Count}");
             return chain;
         }
 
@@ -111,7 +113,7 @@ namespace Game.BehaviourTree
                 return _state;
             }
 
-            var chain = GenerateChain(_controller.IsChaining);
+            var chain = GenerateChain(_controller.GameStyle);
 
             if (chain.Count == 0)
             {

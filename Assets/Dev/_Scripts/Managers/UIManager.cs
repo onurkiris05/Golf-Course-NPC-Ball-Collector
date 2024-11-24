@@ -53,6 +53,7 @@ namespace Game.Managers
             mainMenuCanvas.gameObject.SetActive(state == GameState.Menu);
             gamePanelCanvas.gameObject.SetActive(state == GameState.Playing);
             gameOverCanvas.gameObject.SetActive(state == GameState.End || state == GameState.Tired);
+            staminaBar.gameObject.SetActive(state == GameState.Playing);
         }
 
         private void UpdateStaminaBar()

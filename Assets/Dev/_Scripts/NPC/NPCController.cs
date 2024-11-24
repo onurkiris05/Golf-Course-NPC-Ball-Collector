@@ -12,18 +12,15 @@ namespace Game.NPC
         [Header("Components")]
         [SerializeField] Transform basePoint;
 
-        [Header("Settings")]
-        [InfoBox("Enable this option to allow the NPC to chain multiple collectables " +
-        "in a single trip before returning to the base. " +
-        "Disable it to make the NPC return to the base after collecting each item.", EInfoBoxType.Normal)]
-        [SerializeField] bool isChaining;
-
         public bool IsTired { get; private set; } = false;
         public bool IsPlaying { get; private set; } = false;
-        public bool IsChaining => isChaining;
+        public GameStyle GameStyle => _gameStyle;
         private StaminaController _staminaController;
         private AnimationController _animationController;
         private MovementController _movementController;
+        private GameStyle _gameStyle;
+
+        [Header("Debug")]
         [ShowNonSerializedField]
         private int _collectedScore;
 
@@ -37,11 +34,13 @@ namespace Game.NPC
         private void OnEnable()
         {
             GameManager.OnBeforeStateChanged += OnGameStateChanged;
+            GameManager.OnGameStyleChanged += OnGameStyleChanged;
         }
 
         private void OnDisable()
         {
             GameManager.OnBeforeStateChanged -= OnGameStateChanged;
+            GameManager.OnGameStyleChanged -= OnGameStyleChanged;
         }
 
         private void Start()
@@ -49,6 +48,7 @@ namespace Game.NPC
             _animationController.Init(this);
             _movementController.Init(this);
             _staminaController.Init(this);
+            _gameStyle = GameManager.Instance.GameStyle;
         }
 
         public List<Collectable_Base> GetCollectables() => CollectableManager.Instance.SpawnedCollectables;
@@ -85,6 +85,11 @@ namespace Game.NPC
                     IsTired = true;
                     break;
             }
+        }
+
+        private void OnGameStyleChanged(GameStyle style)
+        {
+            _gameStyle = style;
         }
 
         private void OnTriggerEnter(Collider other)
