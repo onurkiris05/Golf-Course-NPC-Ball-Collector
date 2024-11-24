@@ -9,13 +9,9 @@ namespace Game.Collectables
     {
         public int RewardPoint => _rewardPoint;
         [ShowNonSerializedField]
-        private int _rewardPoint;
+        protected int _rewardPoint;
 
-        public virtual void Setup(int rewardPoint)
-        {
-            _rewardPoint = rewardPoint;
-        }
-
+        public abstract void Setup(int rewardPoint);
         public abstract int Collect();
     }
 }

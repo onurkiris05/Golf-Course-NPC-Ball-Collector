@@ -6,7 +6,7 @@ namespace Game.Managers
     public class ScoreManager : StaticInstance<ScoreManager>
     {
         [ShowNonSerializedField]
-        int _currentScore = 0;
+        private int _currentScore = 0;
 
         public void OnScoreChanged(int score)
         {

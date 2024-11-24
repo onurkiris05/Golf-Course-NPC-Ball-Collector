@@ -46,13 +46,13 @@ namespace Game.BehaviourTree
             return accessible;
         }
 
-        private List<Collectable_Base> FindBestChain()
+        private List<Transform> GenerateChain(bool isChaining)
         {
             var currentPosition = _controller.GetAgentPosition();
             var accessibleCollectables = GetAccessibleCollectables();
-            var bestChain = new List<Collectable_Base>();
+            var chain = new List<Transform>();
             var currentStamina = _controller.GetCurrentStamina();
-            var cartPosition = _controller.GetBasePoint();
+            var cartTransform = _controller.GetCartTransform();
 
             while (accessibleCollectables.Count > 0)
             {
@@ -62,13 +62,13 @@ namespace Game.BehaviourTree
                 foreach (var collectable in accessibleCollectables)
                 {
                     var toBallCost = CalculatePathCost(currentPosition, collectable.transform.position);
-                    var toCartCost = CalculatePathCost(collectable.transform.position, cartPosition);
+                    var toCartCost = CalculatePathCost(collectable.transform.position, cartTransform.position);
                     var totalCost = toBallCost + toCartCost;
 
                     if (totalCost > currentStamina)
                         continue;
 
-                    var score = collectable.RewardPoint - toBallCost;
+                    var score = collectable.RewardPoint - totalCost;
                     if (score > bestScore)
                     {
                         bestScore = score;
@@ -79,13 +79,28 @@ namespace Game.BehaviourTree
                 if (bestNext == null)
                     break;
 
-                bestChain.Add(bestNext);
+                chain.Add(bestNext.transform);
                 currentStamina -= CalculatePathCost(currentPosition, bestNext.transform.position);
-                currentPosition = bestNext.transform.position;
+
+                if (!isChaining)
+                {
+                    chain.Add(cartTransform);
+                    currentStamina -= CalculatePathCost(bestNext.transform.position, cartTransform.position);
+                    currentPosition = cartTransform.position;
+                }
+                else
+                {
+                    currentPosition = bestNext.transform.position;
+                }
+
                 accessibleCollectables.Remove(bestNext);
             }
 
-            return bestChain;
+            if (isChaining)
+                chain.Add(cartTransform);
+
+            Debug.Log($"{(isChaining ? "Best chain" : "Sequential chain")} calculated. Chain count: {chain.Count}");
+            return chain;
         }
 
         public override NodeState Evaluate()
@@ -96,17 +111,19 @@ namespace Game.BehaviourTree
                 return _state;
             }
 
-            var bestChain = FindBestChain();
-            if (bestChain.Count < 0)
+            var chain = GenerateChain(_controller.IsChaining);
+
+            if (chain.Count == 0)
             {
                 _state = NodeState.FAILURE;
                 return _state;
             }
 
-            parent.SetData("bestChain", bestChain);
+            parent.SetData("chain", chain);
             _isCalculated = true;
             _state = NodeState.SUCCESS;
             return _state;
         }
+
     }
 }

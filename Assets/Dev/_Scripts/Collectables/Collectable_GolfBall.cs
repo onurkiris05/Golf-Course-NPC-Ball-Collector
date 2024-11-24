@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Game.Collectables
@@ -8,6 +6,7 @@ namespace Game.Collectables
     public class Collectable_GolfBall : Collectable_Base
     {
         [Header("Animation Settings")]
+        [SerializeField] Transform model;
         [SerializeField] float offsetYValue = 0.5f;
         [SerializeField] float speed = 1f;
 
@@ -26,17 +25,9 @@ namespace Game.Collectables
             _animationCoroutine = StartCoroutine(AnimateCollectable());
         }
 
-        IEnumerator AnimateCollectable()
+        public override void Setup(int rewardPoint)
         {
-            var startPos = transform.position;
-            while (true)
-            {
-                var sinValue = (Mathf.Sin(Time.time * speed) + 1) / 2;
-                var newY = startPos.y + sinValue * offsetYValue;
-
-                transform.position = new Vector3(transform.position.x, newY, transform.position.z);
-                yield return null;
-            }
+            _rewardPoint = rewardPoint;
         }
 
         public override int Collect()
@@ -53,6 +44,19 @@ namespace Game.Collectables
         {
             _meshRenderer.enabled = state;
             _collider.enabled = state;
+        }
+
+        IEnumerator AnimateCollectable()
+        {
+            var startPos = model.position;
+            while (true)
+            {
+                var sinValue = (Mathf.Sin(Time.time * speed) + 1) / 2;
+                var newY = startPos.y + sinValue * offsetYValue;
+
+                model.position = new Vector3(model.position.x, newY, model.position.z);
+                yield return null;
+            }
         }
     }
 }

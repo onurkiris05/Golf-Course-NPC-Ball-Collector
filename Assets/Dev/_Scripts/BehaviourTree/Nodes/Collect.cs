@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Game.Collectables;
 using Game.NPC;
+using UnityEngine;
 
 namespace Game.BehaviourTree
 {
@@ -15,15 +16,15 @@ namespace Game.BehaviourTree
 
         public override NodeState Evaluate()
         {
-            List<Collectable_Base> bestChain = (List<Collectable_Base>)GetData("bestChain");
+            List<Transform> chain = (List<Transform>)GetData("chain");
 
-            if (bestChain == null || bestChain.Count <= 0)
+            if (chain == null || chain.Count <= 0)
             {
                 _state = NodeState.FAILURE;
                 return _state;
             }
 
-            _controller.ProcessMovement(bestChain);
+            _controller.ProcessMovement(chain);
             _state = NodeState.RUNNING;
             return _state;
         }

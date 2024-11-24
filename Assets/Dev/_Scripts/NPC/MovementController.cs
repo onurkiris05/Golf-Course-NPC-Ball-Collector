@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Game.Collectables;
+using Game.Managers;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,37 +26,48 @@ namespace Game.NPC
             _agent.speed = speed;
         }
 
+        private void OnEnable()
+        {
+            GameManager.OnBeforeStateChanged += OnGameStateChanged;
+        }
+
+        private void OnDisable()
+        {
+            GameManager.OnBeforeStateChanged -= OnGameStateChanged;
+        }
+
         public void Init(NPCController controller)
         {
             _controller = controller;
         }
 
-        public void ProcessBestChain(List<Collectable_Base> bestChain)
+        public void ProcessChain(List<Transform> chain)
         {
             if (_isTriggered) return;
 
             _isTriggered = true;
-            StartCoroutine(ProcessChainCoroutine(bestChain));
+            StartCoroutine(ProcessChainCoroutine(chain));
         }
 
-        private IEnumerator ProcessChainCoroutine(List<Collectable_Base> bestChain)
+        public float NormalizedSpeed() => _agent.velocity.magnitude / _agent.speed;
+
+        private void OnGameStateChanged(GameState state)
+        {
+            if (state == GameState.End || state == GameState.Tired)
+                _agent.isStopped = true;
+        }
+
+        private IEnumerator ProcessChainCoroutine(List<Transform> chain)
         {
             //Collect all collectables
-            foreach (var collectable in bestChain)
+            foreach (var target in chain)
             {
-                _agent.SetDestination(collectable.transform.position);
+                _agent.SetDestination(target.position);
 
-                while (Vector3.Distance(_agent.transform.position, collectable.transform.position)
+                while (Vector3.Distance(_agent.transform.position, target.position)
                 > _agent.stoppingDistance)
                     yield return null;
             }
-
-            // Return to the base
-            var basePosition = _controller.GetBasePoint();
-            _agent.SetDestination(basePosition);
-
-            while (Vector3.Distance(_agent.transform.position, basePosition) > _agent.stoppingDistance)
-                yield return null;
 
             _controller.ProcessGameEnd();
             _isTriggered = false;

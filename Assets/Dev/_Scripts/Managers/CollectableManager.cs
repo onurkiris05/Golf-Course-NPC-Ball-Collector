@@ -28,12 +28,30 @@ namespace Game.Managers
         protected override void Awake()
         {
             base.Awake();
+            AdjustSpawnPoints();
             SpawnCollectables();
+        }
+
+        private void AdjustSpawnPoints()
+        {
+            foreach (var collectable in collectables)
+            {
+                foreach (var spawnPoint in collectable.PossibleSpawnPoints)
+                {
+                    if (Terrain.activeTerrain != null)
+                    {
+                        var position = spawnPoint.position;
+                        var terrainHeight = Terrain.activeTerrain.SampleHeight(position);
+                        position.y = terrainHeight + 0.5f;
+                        spawnPoint.position = position;
+                    }
+                }
+            }
         }
 
         private void SpawnCollectables()
         {
-            foreach (CollectableData collectable in collectables)
+            foreach (var collectable in collectables)
             {
                 var availableSpawnPoints = new List<Transform>(collectable.PossibleSpawnPoints);
 
@@ -47,8 +65,8 @@ namespace Game.Managers
 
                     var randomIndex = Random.Range(0, availableSpawnPoints.Count);
                     var instance = Instantiate(collectable.Prefab, availableSpawnPoints[randomIndex].position, Quaternion.identity);
+                    instance.Setup(collectable.RewardPoint);
                     _spawnedCollectables.Add(instance);
-                    collectable.Prefab.Setup(collectable.RewardPoint);
                     availableSpawnPoints.RemoveAt(randomIndex);
                 }
             }

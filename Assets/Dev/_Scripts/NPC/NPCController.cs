@@ -1,19 +1,30 @@
+using System;
 using System.Collections.Generic;
-using Game.BehaviourTree;
 using Game.Collectables;
 using Game.Managers;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace Game.NPC
 {
     public class NPCController : MonoBehaviour
     {
+        [Header("Components")]
         [SerializeField] Transform basePoint;
+
+        [Header("Settings")]
+        [InfoBox("Enable this option to allow the NPC to chain multiple collectables " +
+        "in a single trip before returning to the base. " +
+        "Disable it to make the NPC return to the base after collecting each item.", EInfoBoxType.Normal)]
+        [SerializeField] bool isChaining;
+
         public bool IsTired { get; private set; } = false;
         public bool IsPlaying { get; private set; } = false;
+        public bool IsChaining => isChaining;
         private StaminaController _staminaController;
         private AnimationController _animationController;
         private MovementController _movementController;
+        [ShowNonSerializedField]
         private int _collectedScore;
 
         private void Awake()
@@ -43,15 +54,16 @@ namespace Game.NPC
         public List<Collectable_Base> GetCollectables() => CollectableManager.Instance.SpawnedCollectables;
         public float GetCurrentStamina() => _staminaController.Stamina;
         public float GetStaminaCostPerUnit() => _staminaController.StaminaCostPerUnit;
-        public Vector3 GetBasePoint() => basePoint.position;
+        public Transform GetCartTransform() => basePoint;
         public Vector3 GetAgentPosition() => _movementController.AgentPosition;
         public float GetSpeed() => _movementController.Speed;
+        public float GetNormalizedSpeed() => _movementController.NormalizedSpeed();
         public void ProcessOnTired() => GameManager.Instance.ChangeState(GameState.Tired);
 
-        public void ProcessMovement(List<Collectable_Base> bestChain)
+        public void ProcessMovement(List<Transform> bestChain)
         {
-            _movementController.ProcessBestChain(bestChain);
-            DrawDebugPathWithGizmos(bestChain, GetBasePoint());
+            _movementController.ProcessChain(bestChain);
+            DrawDebugPathWithGizmos(bestChain, GetCartTransform());
         }
 
         public void ProcessGameEnd()
@@ -69,7 +81,7 @@ namespace Game.NPC
                 case GameState.Tired:
                     IsTired = true;
                     break;
-                case GameState.Menu:
+                case GameState.End:
                     IsTired = true;
                     break;
             }
@@ -85,7 +97,6 @@ namespace Game.NPC
             else if (other.CompareTag("Base"))
             {
                 ScoreManager.Instance.OnScoreChanged(_collectedScore);
-                _animationController.SetTrigger("isTired");
                 _collectedScore = 0;
             }
         }
@@ -93,24 +104,22 @@ namespace Game.NPC
         #region Debug
         private List<Vector3> debugPathPoints = new List<Vector3>();
 
-        public void DrawDebugPathWithGizmos(List<Collectable_Base> bestChain, Vector3 cartPosition)
+        public void DrawDebugPathWithGizmos(List<Transform> chain, Transform cartTransform)
         {
             debugPathPoints.Clear();
 
-            if (bestChain == null || bestChain.Count == 0)
+            if (chain == null || chain.Count == 0)
             {
                 Debug.LogWarning("BestChain listesi boş veya null, çizilecek bir rota yok.");
                 return;
             }
 
-            debugPathPoints.Add(cartPosition);
+            debugPathPoints.Add(cartTransform.position);
 
-            foreach (var collectable in bestChain)
-            {
-                debugPathPoints.Add(collectable.transform.position);
-            }
+            foreach (var collectable in chain)
+                debugPathPoints.Add(collectable.position);
 
-            debugPathPoints.Add(cartPosition);
+            debugPathPoints.Add(cartTransform.position);
         }
 
         private void OnDrawGizmos()
@@ -130,6 +139,7 @@ namespace Game.NPC
                 Gizmos.DrawSphere(point, 0.2f);
             }
         }
+
         #endregion
     }
 }

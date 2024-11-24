@@ -15,6 +15,12 @@ namespace Game.NPC
             _animator = GetComponentInChildren<Animator>();
         }
 
+        private void Update()
+        {
+            if (!_controller.IsPlaying) return;
+            _animator.SetFloat("runSpeed", _controller.GetNormalizedSpeed());
+        }
+
         private void OnEnable()
         {
             GameManager.OnBeforeStateChanged += OnGameStateChanged;
@@ -43,6 +49,9 @@ namespace Game.NPC
                     _animator.SetBool("isRunning", true);
                     break;
                 case GameState.Tired:
+                    _animator.SetTrigger("isTired");
+                    break;
+                case GameState.End:
                     _animator.SetTrigger("isTired");
                     break;
             }

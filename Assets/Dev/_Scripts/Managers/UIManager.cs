@@ -15,7 +15,8 @@ namespace Game.Managers
 
         [Header("Components")]
         [SerializeField] Slider staminaBar;
-        [SerializeField] TextMeshProUGUI scoreText;
+        [SerializeField] TextMeshProUGUI ingameScoreText;
+        [SerializeField] TextMeshProUGUI endgameScoreText;
         [SerializeField] NPCController npc;
 
         float maxStamina;
@@ -43,14 +44,15 @@ namespace Game.Managers
 
         public void UpdateScoreText(int score)
         {
-            scoreText.text = score.ToString("0000");
+            ingameScoreText.text = score.ToString("0000");
+            endgameScoreText.text = score.ToString("0000");
         }
 
         private void OnGameStateChanged(GameState state)
         {
             mainMenuCanvas.gameObject.SetActive(state == GameState.Menu);
             gamePanelCanvas.gameObject.SetActive(state == GameState.Playing);
-            gameOverCanvas.gameObject.SetActive(state == GameState.End);
+            gameOverCanvas.gameObject.SetActive(state == GameState.End || state == GameState.Tired);
         }
 
         private void UpdateStaminaBar()
