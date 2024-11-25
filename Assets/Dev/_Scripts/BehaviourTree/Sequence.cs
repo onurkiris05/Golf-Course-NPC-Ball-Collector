@@ -2,6 +2,8 @@ using System.Collections.Generic;
 
 namespace Game.BehaviourTree
 {
+    // Sequence node: Executes child nodes sequentially
+    // Succeeds if all children succeed, fails if any child fails
     public class Sequence : Node
     {
         public Sequence() : base() { }
@@ -10,6 +12,8 @@ namespace Game.BehaviourTree
         public override NodeState Evaluate()
         {
             bool anyChildRunning = false;
+
+            // Iterate through each child and evaluate its state
             foreach (var child in _children)
             {
                 switch (child.Evaluate())

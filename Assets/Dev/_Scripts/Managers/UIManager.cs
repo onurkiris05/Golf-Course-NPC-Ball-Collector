@@ -21,10 +21,8 @@ namespace Game.Managers
 
         float maxStamina;
 
-        private void Start()
-        {
-            maxStamina = npc.GetCurrentStamina();
-        }
+        #region UNITY EVENTS
+        private void Start() => maxStamina = npc.GetCurrentStamina();
 
         private void Update()
         {
@@ -41,13 +39,17 @@ namespace Game.Managers
         {
             GameManager.OnBeforeStateChanged -= OnGameStateChanged;
         }
+        #endregion
 
+        #region PUBLIC METHODS
         public void UpdateScoreText(int score)
         {
             ingameScoreText.text = score.ToString("0000");
             endgameScoreText.text = score.ToString("0000");
         }
+        #endregion
 
+        #region PRIVATE METHODS
         private void OnGameStateChanged(GameState state)
         {
             mainMenuCanvas.gameObject.SetActive(state == GameState.Menu);
@@ -60,5 +62,6 @@ namespace Game.Managers
         {
             staminaBar.value = npc.GetCurrentStamina() / maxStamina;
         }
+        #endregion
     }
 }

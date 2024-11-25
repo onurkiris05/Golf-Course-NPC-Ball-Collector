@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Game.Collectables;
 using Game.Managers;
+using Game.Utilities;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -11,19 +11,21 @@ namespace Game.NPC
     {
         [Header("Components")]
         [SerializeField] Transform basePoint;
-
-        public bool IsTired { get; private set; } = false;
-        public bool IsPlaying { get; private set; } = false;
-        public GameStyle GameStyle => _gameStyle;
-        private StaminaController _staminaController;
-        private AnimationController _animationController;
-        private MovementController _movementController;
-        private GameStyle _gameStyle;
+        [SerializeField] ParticleSystem cartVFX;
 
         [Header("Debug")]
         [ShowNonSerializedField]
         private int _collectedScore;
 
+        public bool IsTired { get; private set; } = false;
+        public bool IsPlaying { get; private set; } = false;
+        public GameStyle GameStyle => _gameStyle;
+        private GameStyle _gameStyle;
+        private StaminaController _staminaController;
+        private AnimationController _animationController;
+        private MovementController _movementController;
+
+        #region UNITY EVENTS
         private void Awake()
         {
             _staminaController = GetComponent<StaminaController>();
@@ -51,6 +53,29 @@ namespace Game.NPC
             _gameStyle = GameManager.Instance.GameStyle;
         }
 
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Collectable")
+            && other.TryGetComponent<Collectable_Base>(out var collectable))
+            {
+                _collectedScore += collectable.Collect();
+                Spawner_Text.Instance.SpawnAndFade(
+                    "Floating Text",
+                    $"Collected: +{collectable.RewardPoint}",
+                    collectable.transform.position,
+                    1f);
+            }
+            else if (other.CompareTag("Base"))
+            {
+                if (_collectedScore == 0) return;
+                ScoreManager.Instance.OnScoreChanged(_collectedScore);
+                cartVFX.Play();
+                _collectedScore = 0;
+            }
+        }
+        #endregion
+
+        #region PUBLIC METHODS
         public List<Collectable_Base> GetCollectables() => CollectableManager.Instance.SpawnedCollectables;
         public float GetCurrentStamina() => _staminaController.Stamina;
         public float GetStaminaCostPerUnit() => _staminaController.StaminaCostPerUnit;
@@ -70,7 +95,9 @@ namespace Game.NPC
         {
             GameManager.Instance.ChangeState(GameState.End);
         }
+        #endregion
 
+        #region PRIVATE METHODS
         private void OnGameStateChanged(GameState state)
         {
             switch (state)
@@ -91,22 +118,9 @@ namespace Game.NPC
         {
             _gameStyle = style;
         }
+        #endregion
 
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag("Collectable")
-            && other.TryGetComponent<Collectable_Base>(out var collectable))
-            {
-                _collectedScore += collectable.Collect();
-            }
-            else if (other.CompareTag("Base"))
-            {
-                ScoreManager.Instance.OnScoreChanged(_collectedScore);
-                _collectedScore = 0;
-            }
-        }
-
-        #region Debug
+        #region DEBUG 
         private List<Vector3> debugPathPoints = new List<Vector3>();
 
         public void DrawDebugPathWithGizmos(List<Transform> chain, Transform cartTransform)

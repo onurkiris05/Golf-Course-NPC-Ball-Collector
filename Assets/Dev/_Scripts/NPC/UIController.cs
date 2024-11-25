@@ -6,6 +6,7 @@ namespace Game.NPC
     {
         private Transform targetCam;
 
+        #region UNITY EVENTS
         private void Start() => targetCam = Camera.main.transform;
 
         private void LateUpdate()
@@ -13,5 +14,6 @@ namespace Game.NPC
             if (targetCam != null)
                 transform.LookAt(transform.position + targetCam.forward);
         }
+        #endregion
     }
 }

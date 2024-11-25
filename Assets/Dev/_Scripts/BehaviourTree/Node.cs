@@ -10,6 +10,7 @@ namespace Game.BehaviourTree
         protected NodeState _state;
         protected List<Node> _children = new();
 
+        // Context for storing and sharing data between nodes
         private Dictionary<string, object> _dataContext = new();
 
         public Node()
@@ -36,6 +37,7 @@ namespace Game.BehaviourTree
             _dataContext[key] = value;
         }
 
+        // Retrieves data using a key, checks parent nodes if not found locally
         public object GetData(string key)
         {
             object value = null;
@@ -53,6 +55,7 @@ namespace Game.BehaviourTree
             return null;
         }
 
+        // Clears data by key, checks parent nodes if not found locally
         public bool ClearData(string key)
         {
             if (_dataContext.ContainsKey(key))

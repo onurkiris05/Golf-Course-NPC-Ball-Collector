@@ -47,6 +47,7 @@ namespace Game.BehaviourTree
             return accessible;
         }
 
+        // Generates a sequence or chain of collectables based on game style
         private List<Transform> GenerateChain(GameStyle gameStyle)
         {
             var currentPosition = _controller.GetAgentPosition();
@@ -60,6 +61,7 @@ namespace Game.BehaviourTree
                 Collectable_Base bestNext = null;
                 var bestScore = float.MinValue;
 
+                // Evaluate each collectable for the best score
                 foreach (var collectable in accessibleCollectables)
                 {
                     var toBallCost = CalculatePathCost(currentPosition, collectable.transform.position);
@@ -121,7 +123,9 @@ namespace Game.BehaviourTree
                 return _state;
             }
 
+            // Store the calculated chain in the parent node
             parent.SetData("chain", chain);
+
             _isCalculated = true;
             _state = NodeState.SUCCESS;
             return _state;

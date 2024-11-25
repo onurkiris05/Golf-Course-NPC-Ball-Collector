@@ -20,18 +20,22 @@ namespace Game.Managers
 
     public class CollectableManager : StaticInstance<CollectableManager>
     {
+        [Header("Components")]
         [SerializeField] CollectableData[] collectables;
 
         public List<Collectable_Base> SpawnedCollectables => _spawnedCollectables;
         private List<Collectable_Base> _spawnedCollectables = new();
 
+        #region UNITY EVENTS
         protected override void Awake()
         {
             base.Awake();
             AdjustSpawnPoints();
             SpawnCollectables();
         }
+        #endregion
 
+        #region PRIVATE METHODS
         private void AdjustSpawnPoints()
         {
             foreach (var collectable in collectables)
@@ -71,5 +75,6 @@ namespace Game.Managers
                 }
             }
         }
+        #endregion
     }
 }

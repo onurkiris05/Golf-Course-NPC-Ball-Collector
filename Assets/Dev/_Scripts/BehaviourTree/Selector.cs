@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace Game.BehaviourTree
 {
+    // Selector node: Tries child nodes in order
+    // Succeeds if any child succeeds, continues if a child is running,
+    // and fails only if all children fail
     public class Selector : Node
     {
         public Selector() : base() { }
@@ -9,6 +12,7 @@ namespace Game.BehaviourTree
 
         public override NodeState Evaluate()
         {
+            // Iterate through each child and evaluate its state
             foreach (var child in _children)
             {
                 switch (child.Evaluate())

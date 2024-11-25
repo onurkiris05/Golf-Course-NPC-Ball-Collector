@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Game.Managers;
 using UnityEngine;
 
@@ -10,6 +8,7 @@ namespace Game.NPC
         private NPCController _controller;
         private Animator _animator;
 
+        #region UNITY EVENTS
         private void Awake()
         {
             _animator = GetComponentInChildren<Animator>();
@@ -30,7 +29,9 @@ namespace Game.NPC
         {
             GameManager.OnBeforeStateChanged -= OnGameStateChanged;
         }
+        #endregion
 
+        #region PUBLIC METHODS
         public void Init(NPCController controller)
         {
             _controller = controller;
@@ -40,7 +41,9 @@ namespace Game.NPC
         {
             _animator.SetTrigger(trigger);
         }
+        #endregion
 
+        #region PRIVATE METHODS
         private void OnGameStateChanged(GameState gameState)
         {
             switch (gameState)
@@ -56,5 +59,6 @@ namespace Game.NPC
                     break;
             }
         }
+        #endregion
     }
 }

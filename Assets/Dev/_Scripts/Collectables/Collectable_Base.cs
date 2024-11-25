@@ -11,7 +11,10 @@ namespace Game.Collectables
         [ShowNonSerializedField]
         protected int _rewardPoint;
 
+
+        #region PUBLIC METHODS
         public abstract void Setup(int rewardPoint);
         public abstract int Collect();
+        #endregion
     }
 }

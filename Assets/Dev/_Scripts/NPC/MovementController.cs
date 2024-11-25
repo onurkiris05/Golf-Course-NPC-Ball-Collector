@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Game.Collectables;
 using Game.Managers;
 using UnityEngine;
 using UnityEngine.AI;
@@ -9,6 +8,7 @@ namespace Game.NPC
 {
     public class MovementController : MonoBehaviour
     {
+        [Header("Settings")]
         [SerializeField] float speed = 3f;
         public float Speed => speed;
         public Vector3 AgentPosition => _agent.transform.position;
@@ -16,15 +16,13 @@ namespace Game.NPC
         private NavMeshAgent _agent;
         private bool _isTriggered;
 
+        #region UNITY EVENTS
         private void Awake()
         {
             _agent = GetComponent<NavMeshAgent>();
         }
 
-        private void Start()
-        {
-            _agent.speed = speed;
-        }
+        private void Start() => _agent.speed = speed;
 
         private void OnEnable()
         {
@@ -35,7 +33,9 @@ namespace Game.NPC
         {
             GameManager.OnBeforeStateChanged -= OnGameStateChanged;
         }
+        #endregion
 
+        #region PUBLIC METHODS
         public void Init(NPCController controller)
         {
             _controller = controller;
@@ -50,7 +50,9 @@ namespace Game.NPC
         }
 
         public float NormalizedSpeed() => _agent.velocity.magnitude / _agent.speed;
+        #endregion
 
+        #region PRIVATE METHODS
         private void OnGameStateChanged(GameState state)
         {
             if (state == GameState.End || state == GameState.Tired)
@@ -62,6 +64,7 @@ namespace Game.NPC
             //Collect all collectables
             foreach (var target in chain)
             {
+                _agent.velocity = Vector3.zero;
                 _agent.SetDestination(target.position);
 
                 while (Vector3.Distance(_agent.transform.position, target.position)
@@ -73,6 +76,6 @@ namespace Game.NPC
             _isTriggered = false;
             Debug.Log("All collectables collected and returned to the cart!");
         }
-
+        #endregion
     }
 }

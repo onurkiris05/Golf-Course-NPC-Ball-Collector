@@ -5,6 +5,10 @@ namespace Game.Collectables
 {
     public class Collectable_GolfBall : Collectable_Base
     {
+        [Header("VFX Settings")]
+        [SerializeField] ParticleSystem stateVFX;
+        [SerializeField] ParticleSystem collectVFX;
+
         [Header("Animation Settings")]
         [SerializeField] Transform model;
         [SerializeField] float offsetYValue = 0.5f;
@@ -14,6 +18,7 @@ namespace Game.Collectables
         private Collider _collider;
         private Coroutine _animationCoroutine;
 
+        #region UNITY EVENTS
         private void Awake()
         {
             _meshRenderer = GetComponentInChildren<MeshRenderer>();
@@ -24,7 +29,9 @@ namespace Game.Collectables
         {
             _animationCoroutine = StartCoroutine(AnimateCollectable());
         }
+        #endregion
 
+        #region PUBLIC METHODS
         public override void Setup(int rewardPoint)
         {
             _rewardPoint = rewardPoint;
@@ -39,11 +46,15 @@ namespace Game.Collectables
             Debug.Log($"{name} Triggered!");
             return RewardPoint;
         }
+        #endregion
 
+        #region PRIVATE METHODS
         private void SetCollectable(bool state)
         {
             _meshRenderer.enabled = state;
             _collider.enabled = state;
+            stateVFX.gameObject.SetActive(state);
+            collectVFX.gameObject.SetActive(!state);
         }
 
         IEnumerator AnimateCollectable()
@@ -58,5 +69,6 @@ namespace Game.Collectables
                 yield return null;
             }
         }
+        #endregion
     }
 }

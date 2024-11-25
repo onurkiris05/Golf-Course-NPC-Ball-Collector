@@ -15,6 +15,7 @@ namespace Game.NPC
         public float StaminaCostPerUnit => staminaCostPerUnit;
         public float Stamina => stamina;
 
+        #region UNITY EVENTS
         private void Start() => _lastPosition = transform.position;
 
         private void Update()
@@ -25,12 +26,16 @@ namespace Game.NPC
             ConsumeStaminaBasedOnDistance(distanceTraveled);
             _lastPosition = transform.position;
         }
+        #endregion
 
+        #region PUBLIC METHODS
         public void Init(NPCController controller)
         {
             _controller = controller;
         }
+        #endregion
 
+        #region PRIVATE METHODS
         private void ConsumeStaminaBasedOnDistance(float distance)
         {
             var staminaLoss = distance * staminaCostPerUnit;
@@ -42,5 +47,6 @@ namespace Game.NPC
                 _controller.ProcessOnTired();
             }
         }
+        #endregion
     }
 }
